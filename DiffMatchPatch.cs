@@ -26,7 +26,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 
-namespace DiffMatchPatch
+namespace csga5000.DiffMatchPatch
 {
     internal static class CompatibilityExtensions
     {

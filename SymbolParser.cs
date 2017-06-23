@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace DiffMatchPatch
+namespace csga5000.DiffMatchPatch
 {
 	public abstract class SymbolTextParser<T>
 	{
