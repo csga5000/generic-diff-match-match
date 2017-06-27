@@ -155,7 +155,7 @@ namespace csga5000.DiffMatchPatch
 			if (src.Count < other.Count)
 				return -1;
 
-			for (var si = startIndex; si+other.Count < src.Count; si++)
+			for (var si = startIndex; si+other.Count <= src.Count; si++)
 			{
 				var match = true;
 				for (var oi = 0; oi < other.Count; oi++)
