@@ -25,6 +25,8 @@ namespace csga5000.DiffMatchPatch
 	{
 		public override string TextFromSymbol(Symbol<T> symbol)
 		{
+            if (symbol.value == null)
+                return null;
 			return symbol.value.ToString();
 		}
 	}

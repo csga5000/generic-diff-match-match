@@ -15,7 +15,8 @@ namespace csga5000.DiffMatchPatch
 		{
 			char char1;
 			char char2;
-
+            if (next.value == null)
+                return 6;
 			if (value is string)
 			{
 				string self = value as string;
