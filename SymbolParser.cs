@@ -240,6 +240,9 @@ namespace csga5000.DiffMatchPatch
 					symbols.Add(new Symbol<string>(s));
 			}
 
+            //Temp fix
+            symbols.RemoveAll(sy => sy.value as string == "");
+
 			return symbols;
 		}
 	}
