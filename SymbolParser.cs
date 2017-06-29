@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace csga5000.DiffMatchPatch
 {
@@ -119,7 +120,8 @@ namespace csga5000.DiffMatchPatch
 					s += c;
 				else
 				{
-					symbols.Add(new Symbol<string>(s));
+                    if(s != "")
+					    symbols.Add(new Symbol<string>(s));
 					s = "" + c;
 					inword = Char.IsLetterOrDigit(c);
 				}
@@ -153,6 +155,7 @@ namespace csga5000.DiffMatchPatch
 
 		protected bool intag = false;
 		protected bool inComment = false;
+        protected bool inEntity = false;
 		protected bool nextnew = false;
 
 		protected bool shouldUseTextParser(char c)
@@ -179,41 +182,69 @@ namespace csga5000.DiffMatchPatch
 
 			List<Symbol<string>> symbols = Symbol<string>.EmptyList;
 
-			for (var i = 0; i < text.Length; i++)
-			{
-				char c = text[i];
+            for (var i = 0; i < text.Length; i++)
+            {
+                char c = text[i];
 
-				//Handle html comments.  Because somebody could have an html tag inside a comment and it could jack everything up.
-				if (!inComment && i + 4 < text.Length && text.Substring(i, 4) == "<!--")
-				{
-					if (s.Length > 0 && usingTextParser)
-					{
-						symbols.AddRange(textParser.SymbolsFromText(s));
-					}
-					s = "<!--";
-					inComment = true;
-					i += 3;
-					continue;
-				}
+                //Handle html comments.  Because somebody could have an html tag inside a comment and it could jack everything up.
+                if (!inComment && i + 4 < text.Length && text.Substring(i, 4) == "<!--")
+                {
+                    if (s.Length > 0 && usingTextParser)
+                    {
+                        symbols.AddRange(textParser.SymbolsFromText(s));
+                    }
+                    s = "<!--";
+                    inComment = true;
+                    i += 3;
+                    continue;
+                }
 
-				if (inComment)
-				{
-					if (text.Substring(i, 3) == "-->")
-					{
-						inComment = false;
-						s += "-->";
-						if (usingTextParser)
-						{
-							symbols.Add(new Symbol<string>(s));
-							s = "";
-						}
-						i += 2;
-					}
-					else
-						s += c;
+                if (inComment)
+                {
+                    if (text.Substring(i, 3) == "-->")
+                    {
+                        inComment = false;
+                        s += "-->";
+                        if (usingTextParser)
+                        {
+                            symbols.Add(new Symbol<string>(s));
+                            s = "";
+                        }
+                        i += 2;
+                    }
+                    else
+                        s += c;
 
-					continue;
-				}
+                    continue;
+                }
+
+                //Handle HTML entities
+                if (!inEntity && i + 1 < text.Length && text.Substring(i, 1) == "&" && Regex.IsMatch(text, @"&\w+;"))
+                {
+                    if (s.Length > 0 && usingTextParser)
+                    {
+                        symbols.AddRange(textParser.SymbolsFromText(s));
+                    }
+                    s = "&";
+                    inEntity = true;
+                    continue;
+                }
+
+                if (inEntity)
+                {
+                    if (text.Substring(i, 1) == ";")
+                    {
+                        inEntity = false;
+                        s += ";";
+                        symbols.Add(new Symbol<string>(s));
+                        s = "";
+                    }
+                    else
+                        s += c;
+
+                    continue;
+                }
+
 				var isnew = nextnew;
 				nextnew = false;
 				var shouldUse = shouldUseTextParser(c);
@@ -225,7 +256,7 @@ namespace csga5000.DiffMatchPatch
 						symbols.AddRange(textParser.SymbolsFromText(s));
 					else
 						symbols.Add(new Symbol<string>(s));
-					s = "";
+                    s = "";
 				}
 
 				s += c;
@@ -239,9 +270,6 @@ namespace csga5000.DiffMatchPatch
 				else
 					symbols.Add(new Symbol<string>(s));
 			}
-
-            //Temp fix
-            symbols.RemoveAll(sy => sy.value as string == "");
 
 			return symbols;
 		}
