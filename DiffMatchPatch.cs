@@ -1776,6 +1776,12 @@ namespace csga5000.DiffMatchPatch
             {
                 return;
             }
+
+            if ((patch.start2 + patch.length1) > text.Count())
+            {
+                return;
+            }
+
             List<Symbol<T>> pattern = text.GetRange(patch.start2, patch.length1);
             int padding = 0;
 

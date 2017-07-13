@@ -127,7 +127,7 @@ namespace csga5000.DiffMatchPatch
 				}
 			}
 
-			if (s.Length > 0)
+			if (s.Length > 0 && s != "")
 				symbols.Add(new Symbol<string>(s));
 
 			return symbols;
@@ -181,7 +181,7 @@ namespace csga5000.DiffMatchPatch
 			string s = "";
 
 			List<Symbol<string>> symbols = Symbol<string>.EmptyList;
-
+            
             for (var i = 0; i < text.Length; i++)
             {
                 char c = text[i];
@@ -219,12 +219,11 @@ namespace csga5000.DiffMatchPatch
                 }
 
                 //Handle HTML entities
-                if (!inEntity && i + 1 < text.Length && text.Substring(i, 1) == "&" && Regex.IsMatch(text, @"&\w+;"))
+                if (intag == false && !inEntity && i + 1 < text.Length && text[i] == '&' && Regex.IsMatch(text, @"&\w+;"))
                 {
                     if (s.Length > 0 && usingTextParser)
-                    {
                         symbols.AddRange(textParser.SymbolsFromText(s));
-                    }
+
                     s = "&";
                     inEntity = true;
                     continue;
@@ -232,11 +231,10 @@ namespace csga5000.DiffMatchPatch
 
                 if (inEntity)
                 {
-                    if (text.Substring(i, 1) == ";")
+                    if (text[i] == ';')
                     {
                         inEntity = false;
-                        s += ";";
-                        symbols.Add(new Symbol<string>(s));
+                        symbols.Add(new Symbol<string>(s+";"));
                         s = "";
                     }
                     else
