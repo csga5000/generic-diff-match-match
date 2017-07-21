@@ -179,6 +179,9 @@ namespace csga5000.DiffMatchPatch
 			intag = false;
 			bool usingTextParser = true;
 			string s = "";
+            //Breaks when text is null TODO: Make it so text is never null
+            if (text == null)
+                text = String.Empty;
 
 			List<Symbol<string>> symbols = Symbol<string>.EmptyList;
             
@@ -268,6 +271,8 @@ namespace csga5000.DiffMatchPatch
 				else
 					symbols.Add(new Symbol<string>(s));
 			}
+
+            symbols.RemoveAll(sy => sy.value as string == null);
 
 			return symbols;
 		}
