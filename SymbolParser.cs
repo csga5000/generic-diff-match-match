@@ -193,10 +193,9 @@ namespace csga5000.DiffMatchPatch
                 if (!inComment && i + 4 < text.Length && text.Substring(i, 4) == "<!--")
                 {
                     if (s.Length > 0 && usingTextParser)
-                    {
                         symbols.AddRange(textParser.SymbolsFromText(s));
-                    }
-                    s = "<!--";
+
+					s = "<!--";
                     inComment = true;
                     i += 3;
                     continue;
@@ -221,30 +220,32 @@ namespace csga5000.DiffMatchPatch
                     continue;
                 }
 
-                //Handle HTML entities
-                if (intag == false && !inEntity && i + 1 < text.Length && text[i] == '&' && Regex.IsMatch(text, @"&\w+;"))
-                {
-                    if (s.Length > 0 && usingTextParser)
-                        symbols.AddRange(textParser.SymbolsFromText(s));
+				//Handle HTML entities
+				//if (!intag && !inComment && !inEntity && i + 1 < text.Length && text[i] == '&' && Regex.IsMatch(text, @"&\w+;"))
+				//{
+				//	if (s.Length > 0 && usingTextParser)
+				//		symbols.AddRange(textParser.SymbolsFromText(s));
+				//	else if (usingTextParser)
+				//		symbols.Add(new Symbol<string>(s));
 
-                    s = "&";
-                    inEntity = true;
-                    continue;
-                }
+				//	s = "&";
+				//	inEntity = true;
+				//	continue;
+				//}
 
-                if (inEntity)
-                {
-                    if (text[i] == ';')
-                    {
-                        inEntity = false;
-                        symbols.Add(new Symbol<string>(s+";"));
-                        s = "";
-                    }
-                    else
-                        s += c;
+				//if (inEntity)
+				//{
+				//	if (text[i] == ';')
+				//	{
+				//		inEntity = false;
+				//		symbols.Add(new Symbol<string>(s + ";"));
+				//		s = "";
+				//	}
+				//	else
+				//		s += c;
 
-                    continue;
-                }
+				//	continue;
+				//}
 
 				var isnew = nextnew;
 				nextnew = false;
