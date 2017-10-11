@@ -320,7 +320,7 @@ namespace csga5000.DiffMatchPatch
                 diffs.Add(new Diff<T>(Operation.EQUAL, commonsuffix));
             }
 
-            diff_cleanupMerge(diffs);
+			diff_cleanupMerge(diffs);
             return diffs;
         }
 
@@ -1776,13 +1776,12 @@ namespace csga5000.DiffMatchPatch
             {
                 return;
             }
-
-            if ((patch.start2 + patch.length1) > text.Count())
-            {
-                return;
-            }
-
-            List<Symbol<T>> pattern = text.GetRange(patch.start2, patch.length1);
+			if ((patch.start2 + patch.length1) > text.Count())
+			{
+				return;
+			}
+				
+			List<Symbol<T>> pattern = text.GetRange(patch.start2, patch.length1);
             int padding = 0;
 
             // Look for the first and last matches of pattern in text.  If two

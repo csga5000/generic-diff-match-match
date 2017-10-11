@@ -273,7 +273,7 @@ namespace csga5000.DiffMatchPatch
 					symbols.Add(new Symbol<string>(s));
 			}
 
-            symbols.RemoveAll(sy => sy.value as string == null);
+            //symbols.RemoveAll(sy => sy.value as string == null);
 
 			return symbols;
 		}
